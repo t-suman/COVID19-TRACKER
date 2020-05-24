@@ -1,26 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+//import Cards from "./components/Cards/Cards";
+//import Charts from "./components/Charts/Charts";
+//import CountryPicker from "./components/CountryPicker/CountryPicker";
+import { Cards, Charts, CountryPicker } from "./components";
+import styles from "./App.module.css";
+import { fetchData, fetchDailyData } from "./api";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  state = {
+    data: {},
+    dailyData: [],
+  };
+
+  componentDidMount = async () => {
+    const fetchedData = await fetchData();
+    const fetchedDailyData = await fetchDailyData();
+    this.setState({ data: fetchedData, dailyData: fetchedDailyData });
+    console.log(this.state.dailyData);
+  };
+  render() {
+    const { data, dailyData } = this.state;
+    return (
+      <div className={styles.container}>
+        <Cards data={data} />
+
+        <CountryPicker />
+
+        <Charts dailyData={dailyData} />
+      </div>
+    );
+  }
 }
-
 export default App;
