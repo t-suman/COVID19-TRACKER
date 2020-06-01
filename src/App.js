@@ -10,23 +10,34 @@ class App extends React.Component {
   state = {
     data: {},
     dailyData: [],
+    country: "",
   };
 
   componentDidMount = async () => {
-    const fetchedData = await fetchData();
+    const fetchedData = await fetchData(this.state.country);
     const fetchedDailyData = await fetchDailyData();
     this.setState({ data: fetchedData, dailyData: fetchedDailyData });
-    console.log(this.state.dailyData);
+    //console.log(this.state.dailyData);
+  };
+  countryChangeListener = async (country) => {
+    const fetchedData = await fetchData(country);
+    this.setState({ country: country, data: fetchedData });
   };
   render() {
-    const { data, dailyData } = this.state;
+    const { data, dailyData, country } = this.state;
     return (
       <div className={styles.container}>
+        <img
+          className={styles.image}
+          src="https://i.ibb.co/7QpKsCX/image.png"
+          alt="COVID.img"
+        />
+
         <Cards data={data} />
 
-        <CountryPicker />
+        <CountryPicker countryChangeListener={this.countryChangeListener} />
 
-        <Charts dailyData={dailyData} />
+        <Charts dailyData={dailyData} data={data} country={country} />
       </div>
     );
   }
